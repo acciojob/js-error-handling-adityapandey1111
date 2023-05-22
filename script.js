@@ -1,45 +1,49 @@
-//your code here
 class OutOfRangeError extends Error {
-  constructor(arg) {
-    super();
-    this.name = 'OutOfRangeError';
-    this.message = `Expression should only consist of integers and +-/* characters and not ${arg}`;
+  constructor() {
+    super("Expression should only consist of integers and +-/* characters and not <arg>");
+    this.name = "OutOfRangeError";
   }
 }
 
 class InvalidExprError extends Error {
   constructor() {
-    super();
-    this.name = 'InvalidExprError';
-    this.message = 'Expression should not have an invalid combination of expression';
+    super("Expression should not have an invalid combination of expression");
+    this.name = "InvalidExprError";
   }
 }
 
 function evaluateExpression(expression) {
-  const validChars = /[0-9+\-*/\s]/;
-  const validCombinations = /(\d+\s*[+\-*/]\s*)*\d+/;
-
-  if (!validChars.test(expression)) {
-    throw new OutOfRangeError(expression);
+  // Check for invalid characters in the expression
+  const validCharacters = /[0-9+\-*/\s]/;
+  for (let i = 0; i < expression.length; i++) {
+    if (!validCharacters.test(expression[i])) {
+      throw new OutOfRangeError();
+    }
   }
 
-  if (!validCombinations.test(expression)) {
+  // Check for invalid combinations of expression
+  const invalidCombinations = /([+\-*/]){2,}|[+\-*/]\s[+\-*/]/;
+  if (invalidCombinations.test(expression)) {
     throw new InvalidExprError();
   }
 
-  // Perform evaluation logic here
+  // Perform the evaluation logic here
+  // ...
+
+  return "Result";
 }
 
 try {
-  evaluateExpression('2 + 3 * 4'); // Example usage
+  const expression = "1 + 2 * 3";
+  const result = evaluateExpression(expression);
+  console.log(result);
 } catch (error) {
   if (error instanceof OutOfRangeError || error instanceof InvalidExprError) {
-    console.log(`${error.name}: ${error.message}`);
+    console.error(error.name + ": " + error.message);
   } else {
-    throw error; // Re-throw any other unexpected errors
+    throw error;
   }
 }
 
-// Make the classes accessible outside the script file
 window.OutOfRangeError = OutOfRangeError;
 window.InvalidExprError = InvalidExprError;
